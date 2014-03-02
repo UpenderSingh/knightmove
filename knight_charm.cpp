@@ -107,7 +107,6 @@ data::_i valid_paths(size_t keypresses) {
     for (data::_i i=2;i<=keypresses;++i) {
         genlevel(i,levels);
     }
-    std::cout<<std::endl;
     return std::accumulate(levels[keypresses][0].begin(),levels[keypresses][0].end(),data::_i{});
 }
 
