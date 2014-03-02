@@ -45,11 +45,6 @@ rmap = {}
 for i, v in izip(count(), ifilter(lambda x: x != '_', chain(*kbd))):
     map[v] = i
     rmap[i] = v
-#print map
-maxlen = max(imap(len, moves.values()))
-
-def fill(lst,maxlen, defval):
-    return lst + [defval]*(maxlen-len(lst))
 
 #Generate kbd.hpp
 def print_cpp_code(fname):

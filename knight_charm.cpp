@@ -99,16 +99,16 @@ void genlevel(data::_i level, data::_levels& levels) {
     levels.push_back(level_cur);
 }
 
-/* Returns the number of valid knight move paths of length 'moves' with at most 
- * 2 vowels in the path. Complexity is O(moves * keyboard_size).
+/* Returns the number of valid knight move paths of length 'keypresses' with at most 
+ * 2 vowels in the path. Complexity is O(keypresses * keyboard_size).
  */
-data::_i valid_moves(size_t moves) {
+data::_i valid_paths(size_t keypresses) {
     data::_levels levels(2);
-    for (data::_i i=2;i<=moves;++i) {
+    for (data::_i i=2;i<=keypresses;++i) {
         genlevel(i,levels);
     }
     std::cout<<std::endl;
-    return std::accumulate(levels[moves][0].begin(),levels[moves][0].end(),data::_i{});
+    return std::accumulate(levels[keypresses][0].begin(),levels[keypresses][0].end(),data::_i{});
 }
 
 //stoi missing from cygwin g++ 4.8.2 ?! TODO: kill with fire when bug is fixed.
@@ -122,6 +122,6 @@ int stoi(const T& t) {
 }
 
 int main(int argc, char** argv) {
-    std::cout << valid_moves(argc==1?10:stoi(argv[1])) <<std::endl;
+    std::cout << valid_paths(argc==1?10:stoi(argv[1])) <<std::endl;
     return 0;
 }
