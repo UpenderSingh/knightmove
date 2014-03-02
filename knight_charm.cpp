@@ -9,7 +9,7 @@
 //Ideally, we want to use 128-bit integers for storing results, as the value of 
 //the output grows exponentially. If you build on 32-bit gcc, this will blow up,
 //so comment out the below. Then we fall back to 64bit representation, which is 
-//enough for up to 38 or so...
+//enough for up to 38 or so... 128bit overflows at 80+ path length.
 #define use128
 
 struct data {
@@ -58,6 +58,7 @@ void print_level(const T& prefix, const data::_level& level) {
 
 /* Compute path counts for all paths of length level, and put into levels. 
  * Assumes that levels[k], 0 <= k < level contains counts of paths of length k.
+ * Complexity of 1 step is O(keyboard_size).
  */
 void genlevel(data::_i level, data::_levels& levels) {
     data::_level level_cur{}; //We need the initializer here, as we want the
@@ -101,7 +102,7 @@ void genlevel(data::_i level, data::_levels& levels) {
 }
 
 /* Returns the number of valid knight move paths of length 'moves' with at most 
- * 2 vowels in the path.
+ * 2 vowels in the path. Complexity is O(moves * keyboard_size).
  */
 data::_i valid_moves(size_t moves) {
     data::_levels levels(2);
