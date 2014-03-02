@@ -1,0 +1,17 @@
+Solves the knights-move problem, in C++ and python.
+Prints number of paths of a given length with at most 2 vowels.
+Complexity: O(number of keypresses)
+
+C++: 
+    requires gcc with C++11 support (4.8 is good), python 2.7 for python.
+    run make to regenerate kbd.hpp and compile knight_charm.cpp. Then run 
+    ./knight_charm [keypresses] in same directory. If no args are given, 
+    then keypresses defaults to 10. 
+    As number of paths is roughly exp(keypresses), overloads the 128bit output 
+    representation at keypresses>80.
+Python: requires python 2.7+
+    requires python 2.7 or 2.8. Does not run with python 3.
+    run "python knights_charm.py" to show help
+    not that running it in check mode is exponential - actually builds all paths
+    as Python uses bigint by default when ints overflow, one can ask for very 
+    big path lenghts, such as "python knights_charm.py run 500", for example.
