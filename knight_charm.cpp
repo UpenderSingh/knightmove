@@ -14,7 +14,7 @@
 
 struct data {
     //Number of keys on keyboard
-    static const size_t size=sizeof(i_to_k); 
+    static const size_t size=i_to_k.size(); 
 #ifdef use128
     typedef unsigned __int128 _i;
 #else
@@ -69,7 +69,6 @@ void genlevel(data::_i level, data::_levels& levels) {
            counts paths with 0 vowels. */
         for (size_t from=0;from<data::size;++from) {
             for(auto to: map[from]) {
-                if (to==-1) break;
                 switch (vowels[from]+vowels[to]) {
                     case 0: level_cur[2][from]++;
                     case 1: level_cur[1][from]++;
@@ -86,7 +85,6 @@ void genlevel(data::_i level, data::_levels& levels) {
          */
         for (size_t from=0;from<data::size;++from) {
             for(auto to: map[from]) {
-                if (to==-1) break;
                 if (!vowels[from]) {
                     level_cur[0][from]+=levels[level-1][0][to];
                     level_cur[1][from]+=levels[level-1][1][to];
@@ -124,6 +122,7 @@ int stoi(const T& t) {
 }
 
 int main(int argc, char** argv) {
+    std::vector<std::vector<int>> k{{1,2,3},{3,4}};
     std::cout << valid_moves(argc==1?10:stoi(argv[1])) <<std::endl;
     return 0;
 }

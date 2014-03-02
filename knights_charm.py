@@ -1,9 +1,18 @@
 __author__ = 'mickg'
+"""Run w/out any command-line args to get help
+Solves the knight-move problem.
+See cpp version for algo description. This version supports verification by brute-force solving (enumerating ALL paths,
+and removing those with more than 2 vowels).
+"""
+
 from collections import defaultdict
 from itertools import *
-kbd = ["ABCDE","FGHIJ","KLMNO","_123_"]
-vowels = set([i for i in "AEIOJ"])
-moves = defaultdict(list)
+import sys
+
+#keyboard specification
+kbd = ["ABCDE","FGHIJ","KLMNO","_123_"] #keyboard. Must be rectangular, use _ to represent non-keys.
+vowels = set([i for i in "AEIOJ"])      #vowel set
+moves = defaultdict(list)               #for each key, a set of keys to which moves are allowed.
 
 def isin_i(kdb, orig_row, orig_col, row, col, moves):
     if row<0 or col<0: return
@@ -23,26 +32,31 @@ def isin(kdb, row, col, moves):
     isin_i(kdb,row,col,row+2,col-1,moves)
     isin_i(kdb,row,col,row+2,col+1,moves)
 
+#Compute allowed moves by trying all 8 knight moves from any position. If we start or lang on a non-_ element, that's an
+#alloweed move.
 for row in range(len(kbd)):
     for col in range(len(kbd[row])):
-        #print col, row, kbd[row][col]
         if kbd[row][col]!='_':
             isin(kbd,row,col,moves)
-#print moves
+
+#build index maps so that we do not do too many map lookups
 map = {}
 rmap = {}
 for i, v in izip(count(), ifilter(lambda x: x != '_', chain(*kbd))):
     map[v] = i
     rmap[i] = v
 #print map
-print "char i_to_k[] ={%s};"%", ".join(["'%s'"%rmap[i] for i in xrange(len(map))])
-print "char vowels[] ={%s};"%", ".join(["'%s'"%(1 if rmap[i] in vowels else 0)for i in xrange(len(map))])
 maxlen = max(imap(len, moves.values()))
 
 def fill(lst,maxlen, defval):
     return lst + [defval]*(maxlen-len(lst))
 
-print "int map[%d][%d] = {\n%s\n};"%(len(map),maxlen,", \n".join(imap(lambda i: "    {%s}"%", ".join(fill(['%s'%map[x] for x in moves[rmap[i]]],maxlen,'-1')),xrange(len(map)))))
+#Generate kbd.hpp
+def print_cpp_code(fname):
+    with open(fname,'w') as f:
+        f.write("std::array<uint8_t,%d> i_to_k {{%s}};\n"%(len(map),", ".join(["'%s'"%rmap[i] for i in xrange(len(map))])))
+        f.write("std::array<bool,%d> vowels {{%s}};\n"%(len(map),", ".join(["%s"%(1 if rmap[i] in vowels else 0)for i in xrange(len(map))])))
+        f.write("std::array<std::vector<int>, %d > map {{\n%s\n}};\n"%(len(map),", \n".join(imap(lambda i: "    {%s}"%", ".join(['%s'%map[x] for x in moves[rmap[i]]]),xrange(len(map))))))
 
 fillmap=defaultdict(list)
 
@@ -118,8 +132,8 @@ def check(ubound):
                     sr = set(r)
                     sd = set(d)
                     sv = set(v)
-                    if sr!=sd:
-                        print "DIVERGENCE - algo broken!!!", len(sr), len(sd), len(sv)
+                    if r!=d:
+                        print "DIVERGENCE - algo broken!!!", len(r), len(d), len(v)
                         print sd - sr
                         print sr - sd
                 print l[2], sum(v_count), sum(imap(len,reduced)), sum(all_count),v_count,  all_count
@@ -127,8 +141,16 @@ def check(ubound):
     print
 
 def run(ubound):
-    print sum(compute(ubound,vowels,None)[0][ubound][0])
+    res,resv=compute(ubound,vowels,None)
+    #for l in izip(res,count()):        for cnd in l[0]:             print l[1], cnd
+    print sum(res[ubound][0])
 
-#check(9)
-run(36)
-print 2**64-1
+if len(sys.argv)==1:
+    print "Usage: %s check %%number | run %%number | generate"%sys.argv[0]
+    sys.exit(0)
+if sys.argv[1]=="check":
+    check(int(sys.argv[2]))
+elif sys.argv[1]=="run":
+    run(int(sys.argv[2]))
+elif sys.argv[1]=="generate":
+    print_cpp_code(sys.argv[2])
