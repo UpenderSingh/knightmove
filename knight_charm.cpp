@@ -122,7 +122,6 @@ int stoi(const T& t) {
 }
 
 int main(int argc, char** argv) {
-    std::vector<std::vector<int>> k{{1,2,3},{3,4}};
     std::cout << valid_moves(argc==1?10:stoi(argv[1])) <<std::endl;
     return 0;
 }
