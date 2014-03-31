@@ -111,16 +111,16 @@ data::_i valid_paths(size_t keypresses) {
 }
 
 //stoi missing from cygwin g++ 4.8.2 ?! TODO: kill with fire when bug is fixed.
-template <class T>
-int stoi(const T& t) {
-    std::stringstream ss;
-    ss << t;
-    int res;
-    ss >> res;
-    return res;
-}
+//template <class T>
+//int stoi(const T& t) {
+//    std::stringstream ss;
+//    ss << t;
+//    int res;
+//    ss >> res;
+//    return res;
+//}
 
 int main(int argc, char** argv) {
-    std::cout << valid_paths(argc==1?10:stoi(argv[1])) <<std::endl;
+    std::cout << valid_paths(argc==1?10:std::stoi(argv[1])) <<std::endl;
     return 0;
 }
